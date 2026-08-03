@@ -1,0 +1,22 @@
+services:
+  app:
+    build: .
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      CHNA_ENVIRONMENT: production
+      CHNA_DATABASE_PATH: /app/.data/chna.db
+      CHNA_UPLOAD_DIR: /app/.data/uploads
+      CHNA_FRONTEND_DIST: /app/web/dist
+    volumes:
+      - chna-data:/app/.data
+    read_only: true
+    tmpfs:
+      - /tmp:size=128m,noexec,nosuid
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+
+volumes:
+  chna-data:
