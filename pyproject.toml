@@ -1,0 +1,71 @@
+[build-system]
+requires = ["hatchling==1.31.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "chna-extractor"
+version = "1.0.0"
+description = "Evidence-first Community Health Needs Assessment extraction"
+readme = "README.md"
+requires-python = ">=3.13,<3.14"
+authors = [{ name = "Jasper Burrows" }]
+dependencies = [
+  "aiosqlite==0.22.1",
+  "fastapi==0.141.1",
+  "httpx==0.28.1",
+  "openai==2.52.0",
+  "pydantic==2.13.4",
+  "pydantic-settings==2.14.2",
+  "pymupdf==1.28.0",
+  "python-multipart==0.0.32",
+  "structlog==26.1.0",
+  "typer==0.27.0",
+  "uvicorn[standard]==0.52.1",
+]
+
+[project.optional-dependencies]
+dev = [
+  "mypy==2.3.0",
+  "hypothesis==6.160.0",
+  "pre-commit==4.6.1",
+  "pytest==9.1.1",
+  "pytest-asyncio==1.4.0",
+  "pytest-cov==7.1.0",
+  "ruff==0.16.1",
+]
+
+[project.scripts]
+chna = "chna_extractor.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/chna_extractor"]
+
+[tool.pytest.ini_options]
+addopts = "--strict-markers --strict-config --cov=chna_extractor --cov-report=term-missing --cov-fail-under=80"
+testpaths = ["tests"]
+asyncio_mode = "auto"
+markers = ["live: opt-in external-provider validation requiring explicit approval"]
+
+[tool.ruff]
+target-version = "py313"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "ASYNC", "S", "SIM", "RUF"]
+ignore = ["S101"]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+packages = ["chna_extractor"]
+
+[[tool.mypy.overrides]]
+module = ["fitz", "fitz.*"]
+ignore_missing_imports = true
+
+[tool.coverage.run]
+branch = true
+source = ["chna_extractor"]
+
+[tool.coverage.report]
+exclude_also = ["if TYPE_CHECKING:", "if __name__ == .__main__.:"]
