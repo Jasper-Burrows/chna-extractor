@@ -6,7 +6,7 @@ RUN npm ci
 COPY web/ ./
 RUN npm run build
 
-FROM ghcr.io/astral-sh/uv:0.12.1 AS uv
+FROM ghcr.io/astral-sh/uv:0.13.2 AS uv
 
 FROM python:3.13.14-slim AS runtime
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
